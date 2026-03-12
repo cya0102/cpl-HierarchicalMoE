@@ -76,6 +76,10 @@ class MainRunner:
             rnk_loss, rnk_loss_dict = ivc_loss(**output, num_props=self.model.num_props, **self.args['loss'])
             loss_dict.update(rnk_loss_dict)
             loss = loss + rnk_loss
+            # Add MoE load-balancing loss if present (for CPL_MoE model)
+            if 'moe_loss' in output and output['moe_loss'] is not None:
+                loss = loss + output['moe_loss']
+                loss_dict['moe_loss'] = output['moe_loss'].item()
             loss.backward()
             torch.nn.utils.clip_grad_norm_(self.model.parameters(), 10)
             self.optimizer.step()
