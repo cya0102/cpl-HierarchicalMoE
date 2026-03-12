@@ -1,0 +1,8 @@
+__pycache__
+logs
+*.idea
+*.png
+*.pdf
+*.txt
+
+save
